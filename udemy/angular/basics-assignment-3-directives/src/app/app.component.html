@@ -10,7 +10,7 @@
       </ol>
       <button class="btn btn-primary" (click)="onShowSecret()">Display Details</button>
       <p *ngIf="showSecret">Secret Password = tuna</p>
-      <p *ngFor="let text of log; let i = index" [ngStyle]="{backgroundColor: i >= 4 ? 'blue' : 'white'}" [ngClass]="{five: i >= 4}">{{text}}</p>
+      <p *ngFor="let text of log; let i = index" [ngStyle]="{backgroundColor: i >= 4 ? 'blue' : 'transparent'}" [ngClass]="{five: i >= 4}">{{text}}</p>
     </div>
   </div>
 </div>

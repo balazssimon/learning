@@ -7,13 +7,11 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   showSecret = false;
-  counter = 0;
   log = [];
 
   onShowSecret() {
     this.showSecret = !this.showSecret;
-    ++this.counter;
-    const text = 'Button clicked (' + this.counter + ')';
+    const text = 'Button clicked (' + new Date() + ')';
     this.log.push(text);
   }
 }
