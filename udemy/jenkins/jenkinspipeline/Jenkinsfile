@@ -33,7 +33,7 @@ pipeline {
         stage('Deploy to Staging') {
             steps {
                 dir (env.PROJECT_ROOT) {
-                    powershell "docker container cp target/webapp.war ${params.tomcat_staging}:/usr/local/tomcat/webapps/webapp.war"
+                    powershell "docker container cp webapp/target/webapp.war ${params.tomcat_staging}:/usr/local/tomcat/webapps/webapp.war"
                 }
             }
         }
@@ -43,7 +43,7 @@ pipeline {
                     input message: 'Approve PRODUCTION deployment?'
                 }
                 dir (env.PROJECT_ROOT) {
-                    powershell "docker container cp target/webapp.war ${params.tomcat_production}:/usr/local/tomcat/webapps/webapp.war"
+                    powershell "docker container cp webapp/target/webapp.war ${params.tomcat_production}:/usr/local/tomcat/webapps/webapp.war"
                 }
             }
             post {
