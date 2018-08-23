@@ -30,33 +30,28 @@ pipeline {
                 }
             }
         }
-        stage('Deploy')
-        {
-            parallel {
-                stage('Deploy to Staging') {
-                    steps {
-                        dir (env.PROJECT_ROOT) {
-                            powershell "docker container cp **/target/*.war ${params.tomcat_staging}:/usr/local/tomcat/webapps/"
-                        }
-                    }
+        stage('Deploy to Staging') {
+            steps {
+                dir (env.PROJECT_ROOT) {
+                    powershell "docker container cp target/webapp.war ${params.tomcat_staging}:/usr/local/tomcat/webapps/webapp.war"
                 }
-                stage('Deploy to Production') {
-                    steps {
-                        timeout(time:5, unit:'DAYS') {
-                            input message: 'Approve PRODUCTION deployment?'
-                        }
-                        dir (env.PROJECT_ROOT) {
-                            powershell "docker container cp **/target/*.war ${params.tomcat_production}:/usr/local/tomcat/webapps/"
-                        }
-                    }
-                    post {
-                        success {
-                            echo 'Code deployed to production.'
-                        }
-                        failure {
-                            echo 'Deployment failed.'
-                        }
-                    }
+            }
+        }
+        stage('Deploy to Production') {
+            steps {
+                timeout(time:5, unit:'DAYS') {
+                    input message: 'Approve PRODUCTION deployment?'
+                }
+                dir (env.PROJECT_ROOT) {
+                    powershell "docker container cp target/webapp.war ${params.tomcat_production}:/usr/local/tomcat/webapps/webapp.war"
+                }
+            }
+            post {
+                success {
+                    echo 'Code deployed to production.'
+                }
+                failure {
+                    echo 'Deployment failed.'
                 }
             }
         }
