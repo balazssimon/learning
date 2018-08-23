@@ -24,7 +24,7 @@ pipeline {
         stage('Deploy to Staging') {
             steps {
                 dir (params.project_root) {
-                    build job: 'Deploy-to-staging'
+                    build job: 'deploy-to-staging'
                 }                
             }
         }
