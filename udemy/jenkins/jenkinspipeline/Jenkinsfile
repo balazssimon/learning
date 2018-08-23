@@ -1,8 +1,10 @@
 pipeline {
     agent any
     
-    def project_root = 'udemy/jenkins/jenkinspipeline'
-	
+    environment {
+        PROJECT_ROOT = 'udemy/jenkins/jenkinspipeline'
+    }
+
     parameters {
         string (name: 'tomcat_staging', defaultValue: 'tomcat_staging_1', description: 'Staging server')
         string (name: 'tomcat_production', defaultValue: 'tomcat_production_1', description: 'Production server')
@@ -15,13 +17,13 @@ pipeline {
     stages{
         stage('Build'){
             steps {
-                dir (project_root) {
+                dir (env.PROJECT_ROOT) {
                     powershell "mvn clean package"
                 }
             }
             post {
                 success {
-                    dir (project_root) {
+                    dir (env.PROJECT_ROOT) {
                         echo "Now Archiving..."
                         archiveArtifacts artifacts: "**/target/*.war"
                     }
@@ -33,7 +35,7 @@ pipeline {
             parallel {
                 stage('Deploy to Staging') {
                     steps {
-                        dir (project_root) {
+                        dir (env.PROJECT_ROOT) {
                             powershell "docker container cp **/target/*.war ${params.tomcat_staging}:/usr/local/tomcat/webapps/"
                         }
                     }
@@ -43,7 +45,7 @@ pipeline {
                         timeout(time:5, unit:'DAYS') {
                             input message: 'Approve PRODUCTION deployment?'
                         }
-                        dir (project_root) {
+                        dir (env.PROJECT_ROOT) {
                             powershell "docker container cp **/target/*.war ${params.tomcat_production}:/usr/local/tomcat/webapps/"
                         }
                     }
