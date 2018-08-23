@@ -1,31 +1,55 @@
 pipeline {
     agent any
     
-    parameters {
-        string(name: 'project_root', defaultValue: 'udemy/jenkins/jenkinspipeline', description: 'Maven project root folder')
-    }
+    def project_root = 'udemy/jenkins/jenkinspipeline'
 	
-    stages{
-        stage('Build'){
-            steps {
-                dir (params.project_root) {
+    parameters {
+        string (name: 'tomcat_staging', defaultValue: 'tomcat_staging_1', description: 'Staging server')
+        string (name: 'tomcat_production', defaultValue: 'tomcat_production_1', description: 'Production server')
+    }
+
+    triggers {
+        pollSCM('* * * * *')
+    }
+
+    dir (project_root) {
+        stages{
+            stage('Build'){
+                steps {
                     powershell "mvn clean package"
                 }
-            }
-            post {
-                success {
-                    dir (params.project_root) {
+                post {
+                    success {
                         echo "Now Archiving..."
                         archiveArtifacts artifacts: "**/target/*.war"
-                    }   
+                    }
                 }
             }
-        }
-        stage('Deploy to Staging') {
-            steps {
-                dir (params.project_root) {
-                    build job: 'deploy-to-staging'
-                }                
+            stage('Deploy')
+            {
+                parallel {
+                    stage('Deploy to Staging') {
+                        steps {
+                            powershell "docker container cp **/target/*.war ${params.tomcat_staging}:/usr/local/tomcat/webapps/"
+                        }
+                    }
+                    stage('Deploy to Production') {
+                        steps {
+                            timeout(time:5, unit:'DAYS') {
+                                input message: 'Approve PRODUCTION deployment?'
+                            }
+                            powershell "docker container cp **/target/*.war ${params.tomcat_production}:/usr/local/tomcat/webapps/"
+                        }
+                        post {
+                            success {
+                                echo 'Code deployed to production.'
+                            }
+                            failure {
+                                echo 'Deployment failed.'
+                            }
+                        }
+                    }
+                }
             }
         }
     }

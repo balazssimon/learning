@@ -1,6 +1,15 @@
-# maven-project
-Source code for James Lee's Jenkins course.
+= Setup
 
-Check out the full list of DevOps and Big Data courses that James and Tao teach.
+Run:
 
-https://www.level-up.one/courses/
+```
+docker-compose up
+```
+
+= Teardown
+
+Run:
+
+```
+docker-compose down
+```
