@@ -1,4 +1,4 @@
-= Setup
+# Setup
 
 Run:
 
@@ -6,7 +6,7 @@ Run:
 docker-compose up
 ```
 
-= Teardown
+# Teardown
 
 Run:
 
