@@ -11,6 +11,7 @@ pipeline {
             }
             post {
                 success {
+                    echo $(pwd)
                     echo "Now Archiving..."
                     archiveArtifacts artifacts: "**/target/*.war"
                 }
