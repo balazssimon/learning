@@ -1,0 +1,18 @@
+pipeline {
+    agent any
+    
+    environment {
+        PROJECT_ROOT = 'udemy/jenkins/jenkinspipeline-dockerfile'
+    }
+
+    stages{
+        stage('Build'){
+            steps {
+                dir (env.PROJECT_ROOT) {
+                    powershell "mvn clean package"
+                    powershell "docker build . -t tomcatwebapp:${env.BUILD_ID}"
+                }
+            }
+        }
+    }
+}
