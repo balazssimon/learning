@@ -1,19 +1,23 @@
 pipeline {
     agent any
     
-	stages{
+    parameters {
+        string(name: 'project_root', defaultValue: 'udemy/jenkins/jenkinspipeline', description: 'Maven project root folder')
+    }
+	
+    stages{
         stage('Build'){
             steps {
-                powershell '''
-                    cd udemy/jenkins/jenkinspipeline
-                    mvn clean package
-                '''
+                dir (${params.project_root}) {
+                    powershell "mvn clean package"
+                }
             }
             post {
                 success {
-                    echo $(pwd)
-                    echo "Now Archiving..."
-                    archiveArtifacts artifacts: "**/target/*.war"
+                    dir (${params.project_root}) {
+                        echo "Now Archiving..."
+                        archiveArtifacts artifacts: "**/target/*.war"
+                    }   
                 }
             }
         }
