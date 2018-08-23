@@ -4,6 +4,7 @@ pipeline {
 	stages{
         stage('Build'){
             steps {
+                powershell "cd udemy/jenkins/jenkinspipeline"
                 powershell "mvn clean package"
             }
             post {
