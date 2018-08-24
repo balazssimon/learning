@@ -1,0 +1,10 @@
+# Deployment and rollout
+
+Commands:
+```
+kubectl get deployments
+kubectl rollout status deployment tomcat-deployment
+kubectl set image deployment/tomcat-deployment tomcat=tomcat:9.0.1
+kubectl rollout history deployment/tomcat-deployment
+kubectl rollout history deployment/tomcat-deployment --revision=2
+```
