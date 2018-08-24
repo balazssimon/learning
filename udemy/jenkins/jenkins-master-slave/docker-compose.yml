@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  jenkins-master:
+    image: jenkins/jenkins
+    ports:
+      - "8080:8080"
+    volumes:
+      - master-data:/var/jenkins_home
+  jenkins-slave1:
+    image: jenkins/ssh-slave
+    ports:
+      - "8081:8080"
+    volumes:
+      - slave1-data:/var/jenkins_home
+      - slave1-ssh:/home/jenkins/.ssh
+  jenkins-slave2:
+    image: jenkins/ssh-slave
+    ports:
+      - "8082:8080"
+    volumes:
+      - slave2-data:/var/jenkins_home
+      - slave2-ssh:/home/jenkins/.ssh
+
+volumes:
+  master-data:
+  slave1-data:
+  slave2-data:
+  slave1-ssh:
+  slave2-ssh:
